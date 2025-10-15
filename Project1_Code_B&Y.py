@@ -200,6 +200,92 @@ def avg_bill_by_species_sex(cleaned_data):
 
     return yuki_result_1
 
+#Yuki's Second Calculation: Calculate the percentage of penguins with bill length/depth above the median for each island and species
+def species_bill_ratio_median(cleaned_data):
+
+    species_ratios = {}
+
+    for row in cleaned_data:
+        species = row.get('species', '')
+
+        try:
+            bill_length = float(row["bill_length_mm"])
+            bill_depth = float(row["bill_depth_mm"])
+
+            if bill_depth == 0:
+                continue
+
+        except (ValueError, TypeError, KeyError):
+            continue
+
+        ratio = bill_length / bill_depth
+
+        if species not in species_ratios:
+            species_ratios[species] = []
+
+        species_ratios[species].append(ratio)
+
+    species_medians = {}
+
+    for species, ratios in species_ratios.items():
+        if ratios:
+            sorted_ratios = sorted(ratios)
+            n = len(sorted_ratios)
+            mid = n // 2
+
+            if n % 2 == 0:
+                median = (sorted_ratios[mid - 1] + sorted_ratios[mid]) / 2
+            else:
+                median = sorted_ratios[mid]
+
+            species_medians[species] = median
+
+    total_counts = {}
+    above_median_counts = {}
+
+    for row in cleaned_data:
+        island = row.get('island', '')
+        species = row.get('species', '')
+
+        if species not in species_medians:
+            continue
+
+        try:
+            bill_length = float(row["bill_length_mm"])
+            bill_depth = float(row["bill_depth_mm"])
+
+            if bill_depth == 0:
+                continue
+
+        except (ValueError, TypeError, KeyError):
+            continue
+
+        ratio = bill_length / bill_depth
+        
+        key = (island, species)
+
+        total_counts[key] = total_counts.get(key, 0) + 1
+
+        if ratio > species_medians[species]:
+            above_median_counts[key] = above_median_counts.get(key, 0) + 1
+
+    yuki_result_2 = []
+
+    for key in total_counts:
+        island = key[0]
+        species = key[1]
+        total = total_counts[key]
+        above_median = above_median_counts.get(key, 0)
+
+        if total > 0:
+            percentage = (above_median / total) * 100
+        else:
+            percentage = 0.0
+
+        yuki_result_2.append((island, species, percentage))
+
+    return yuki_result_2
+
 if __name__ == "__main__":
     data = load_data('penguins.csv')
     cleaned_data = clean_and_cast(data)
