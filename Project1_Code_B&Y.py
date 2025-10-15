@@ -286,6 +286,13 @@ def species_bill_ratio_median(cleaned_data):
 
     return yuki_result_2
 
+#Unit Tests For All Calculations
+class TestCalculations(unittest.TestCase):
+
+    def setUp(self):
+        self.data = load_data('penguins.csv')
+        self.cleaned_data = clean_and_cast(self.data)
+
 if __name__ == "__main__":
     data = load_data('penguins.csv')
     cleaned_data = clean_and_cast(data)
