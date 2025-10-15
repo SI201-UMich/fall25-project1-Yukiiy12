@@ -22,3 +22,33 @@ def load_data(f):
 
     return data
 
+#Drops rows with invalid or missing data
+def clean_and_cast(data):
+    null_values = {'', 'na', 'null'}
+
+    cleaned_data = []
+
+    for row in data:
+        
+        new_row = {}
+
+        for key, value in row.items():
+            cleaned_value = str(value).strip()
+
+            if cleaned_value.lower() in null_values:
+                new_row[key] = None
+                continue
+
+            try:
+                if '.' not in cleaned_value:
+                    new_row[key] = int(cleaned_value)
+
+                else:
+                    new_row[key] = float(cleaned_value)
+
+            except ValueError:
+                new_row[key] = cleaned_value
+
+        cleaned_data.append(new_row)
+
+    return cleaned_data
