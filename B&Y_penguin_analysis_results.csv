@@ -1,0 +1,38 @@
+
+Benson's First Calculation: Average Body Mass by Species and Sex
+Species,Sex,Average Body Mass (g)
+Adelie,male,4043.4931506849316
+Adelie,female,3368.8356164383563
+Adelie,,3540.0
+Gentoo,female,4679.741379310345
+Gentoo,male,5484.836065573771
+Gentoo,,4587.5
+Chinstrap,female,3527.205882352941
+Chinstrap,male,3938.970588235294
+
+Benson's Second Calculation: The Percentage of Penguins with Flipper Length Above Species Average by Island and Species
+Island,Species,Percentage Above Average Flipper Length (%)
+Torgersen,Adelie,64.70588235294117
+Biscoe,Adelie,50.0
+Dream,Adelie,55.35714285714286
+Biscoe,Gentoo,43.08943089430895
+Dream,Chinstrap,51.470588235294116
+
+Yuki's First Calculation: Average Bill Length/Depth by Species and Sex
+Species,Sex,Average Bill Length (mm),Average Bill Depth (mm)
+Adelie,male,40.39041095890411,19.072602739726026
+Adelie,female,37.25753424657535,17.62191780821918
+Adelie,,37.839999999999996,18.32
+Gentoo,female,45.563793103448276,14.237931034482758
+Gentoo,male,49.47377049180328,15.718032786885246
+Gentoo,,45.625,14.55
+Chinstrap,female,46.5735294117647,17.58823529411765
+Chinstrap,male,51.09411764705882,19.25294117647059
+
+Yuki's Second Calculation: The Percentage of Penguins with Bill Length/Depth Ratio Above Species Median by Island and Species
+Island,Species,Percentage Above Median Bill Length/Depth Ratio (%)
+Torgersen,Adelie,54.90196078431373
+Biscoe,Adelie,54.54545454545454
+Dream,Adelie,41.07142857142857
+Biscoe,Gentoo,49.59349593495935
+Dream,Chinstrap,50.0
