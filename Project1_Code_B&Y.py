@@ -167,6 +167,39 @@ def flipper_above_species_avg(cleaned_data, benson_result_2):
 
     return benson_result_3
 
+#Yuki's First Calculation: Calculate average bill length/depth for male and female penguins in each species
+def avg_bill_by_species_sex(cleaned_data):
+
+    data = {}
+
+    for row in cleaned_data:
+        species = row.get('species', '')
+        sex = row.get('sex', '')
+        key = (species, sex)
+
+        try:
+            bill_length = float(row["bill_length_mm"])
+            bill_depth = float(row["bill_depth_mm"])
+
+        except (ValueError, TypeError, KeyError):
+            continue
+
+        if key not in data:
+            data[key] = {'bill_length': [], 'bill_depth': []}
+
+        data[key]['bill_length'].append(bill_length)
+        data[key]['bill_depth'].append(bill_depth)
+
+    yuki_result_1 = []
+
+    for (species, sex), values in data.items():
+        avg_length = sum(data[(species, sex)]['bill_length']) / len(data[(species, sex)]['bill_length'])
+        avg_depth = sum(data[(species, sex)]['bill_depth']) / len(data[(species, sex)]['bill_depth'])
+
+        yuki_result_1.append((species, sex, avg_length, avg_depth))
+
+    return yuki_result_1
+
 if __name__ == "__main__":
     data = load_data('penguins.csv')
     cleaned_data = clean_and_cast(data)
