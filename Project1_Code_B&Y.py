@@ -111,6 +111,62 @@ def species_flipper_avg(cleaned_data):
 
     return benson_result_2
 
+#Benson's Second Calculation (2): Calculate the percentage of penguins with flipper length greater than the average flipper length for each island and species
+def flipper_above_species_avg(cleaned_data, benson_result_2):
+    
+    total_counts = {}
+    above_avg_counts = {}
+
+    for row in cleaned_data:
+        species = row.get('species', '')
+        island  = row.get('island', '')
+
+        if species not in benson_result_2:
+            continue
+
+        try:
+            flipper_length = float(row["flipper_length_mm"])
+
+        except (ValueError, TypeError, KeyError):
+            continue
+
+        key = (island, species)
+
+        if key not in total_counts:
+            total_counts[key] = 0
+        
+        total_counts[key] += 1
+
+        species_avg_length = benson_result_2[species]
+
+        if flipper_length > species_avg_length:
+            if key not in above_avg_counts:
+                above_avg_counts[key] = 0
+            
+            above_avg_counts[key] += 1
+
+    benson_result_3 = []
+
+    for key in total_counts:
+        island = key[0]
+        species = key[1]
+        total = total_counts[key]
+
+        if key in above_avg_counts:
+            above_avg = above_avg_counts[key]
+        else:
+            above_avg = 0
+
+        if total > 0:
+            percentage = (above_avg / total) * 100
+
+        else:
+            percentage = 0.0
+
+        benson_result_3.append((island, species, percentage))
+
+    return benson_result_3
+
 if __name__ == "__main__":
     data = load_data('penguins.csv')
     cleaned_data = clean_and_cast(data)
