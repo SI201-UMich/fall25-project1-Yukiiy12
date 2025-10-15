@@ -5,6 +5,7 @@
 
 import os
 import csv
+import unittest
 
 #Read penguins.csv file
 def load_data(f):
@@ -388,7 +389,7 @@ class TestCalculations(unittest.TestCase):
         result = species_bill_ratio_median(self.cleaned_data)
         species = {r[1] for r in result}
         self.assertGreater(len(species), 1)
-        
+
 #Write all results to a CSV file
 def write_csv(filename, results_dict):
 
@@ -402,6 +403,8 @@ def write_csv(filename, results_dict):
             writer.writerows(rows)
 
 if __name__ == "__main__":
+    unittest.main(exit=False)
+
     data = load_data('penguins.csv')
     cleaned_data = clean_and_cast(data)
 
