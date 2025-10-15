@@ -344,6 +344,50 @@ class TestCalculations(unittest.TestCase):
         result = flipper_above_species_avg(self.cleaned_data, avg_dict)
         islands = {r[0] for r in result}
         self.assertGreater(len(islands), 1)
+
+    #Yuki's First Calculation (Avg Bill Length/Depth)
+
+    def test_bill_avg_basic(self): #Normal case: returns list of tuples
+        result = avg_bill_by_species_sex(self.cleaned_data)
+        self.assertIsInstance(result, list)
+        self.assertIsInstance(result[0], tuple)
+
+    def test_bill_avg_positive(self): #Average length/depth should be positive
+        result = avg_bill_by_species_sex(self.cleaned_data)
+        for _, _, l, d in result:
+            self.assertTrue(l > 0 and d > 0)
+
+    def test_bill_avg_species_included(self): #Ensure Adelie is in species list
+        result = avg_bill_by_species_sex(self.cleaned_data)
+        species = [r[0] for r in result]
+        self.assertIn('Adelie', species)
+
+    def test_bill_avg_handle_missing(self): #Ensure function can skip NA values
+        bad_data = self.cleaned_data + [{'species': 'Adelie', 'bill_length_mm': 'NA', 'bill_depth_mm': 'NA'}]
+        result = avg_bill_by_species_sex(bad_data)
+        self.assertGreaterEqual(len(result), 1)
+
+    #Yuki's Second Calculation (The Percentage of Bill Length/Depth Ratio > Median)
+
+    def test_bill_ratio_basic(self): #Normal case: returns list
+        result = species_bill_ratio_median(self.cleaned_data)
+        self.assertIsInstance(result, list)
+        self.assertGreater(len(result), 0)
+
+    def test_bill_ratio_percent_range(self): #Percentage between 0 and 100
+        result = species_bill_ratio_median(self.cleaned_data)
+        for _, _, pct in result:
+            self.assertTrue(0 <= pct <= 100)
+
+    def test_bill_ratio_ignore_zero_depth(self): #Ensure the function can run when bill_depth = 0
+        bad_data = self.cleaned_data + [{'species': 'Adelie', 'bill_length_mm': 40, 'bill_depth_mm': 0}]
+        result = species_bill_ratio_median(bad_data)
+        self.assertIsInstance(result, list)
+
+    def test_bill_ratio_multiple_species(self): #Ensure the result includes multiple species
+        result = species_bill_ratio_median(self.cleaned_data)
+        species = {r[1] for r in result}
+        self.assertGreater(len(species), 1)
         
 #Write all results to a CSV file
 def write_csv(filename, results_dict):
