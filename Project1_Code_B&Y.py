@@ -52,3 +52,39 @@ def clean_and_cast(data):
         cleaned_data.append(new_row)
 
     return cleaned_data
+
+#Benson's First Calculation: Calculate average body mass for male penguins and female penguins of each species
+def avg_mass_by_species_sex(cleaned_data):
+
+    data = {}
+
+    for row in cleaned_data:
+        species = row.get('species', '')
+        sex = row.get('sex', '')
+        key = (species, sex)
+
+        try:
+            body_mass = float(row["body_mass_g"])
+
+        except (ValueError, TypeError, KeyError):
+            continue
+
+        if key not in data:
+            data[key] = []
+        
+        data[key].append(body_mass)
+
+    benson_result_1 = []
+
+    for (species, sex), masses in data.items():
+        avg_mass = sum(masses) / len(masses)
+
+        benson_result_1.append((species, sex, avg_mass))
+
+    return benson_result_1
+
+if __name__ == "__main__":
+    data = load_data('penguins.csv')
+    cleaned_data = clean_and_cast(data)
+
+print(cleaned_data)
