@@ -83,6 +83,34 @@ def avg_mass_by_species_sex(cleaned_data):
 
     return benson_result_1
 
+#Benson's Second Calculation (1): Calculate average flipper length of penguins for each species
+def species_flipper_avg(cleaned_data):
+    
+    data = {}
+
+    for row in cleaned_data:
+        species = row.get('species', '')
+
+        try:
+            flipper_length = float(row["flipper_length_mm"])
+
+        except (ValueError, TypeError, KeyError):
+            continue
+
+        if species not in data:
+            data[species] = []
+        
+        data[species].append(flipper_length)
+
+    benson_result_2 = {}
+
+    for species, lengths in data.items():
+        if lengths:
+            avg_length = sum(lengths) / len(lengths)
+            benson_result_2[species] = avg_length
+
+    return benson_result_2
+
 if __name__ == "__main__":
     data = load_data('penguins.csv')
     cleaned_data = clean_and_cast(data)
