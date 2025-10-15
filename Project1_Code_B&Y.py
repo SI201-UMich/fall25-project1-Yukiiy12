@@ -293,6 +293,58 @@ class TestCalculations(unittest.TestCase):
         self.data = load_data('penguins.csv')
         self.cleaned_data = clean_and_cast(self.data)
 
+    #Benson's First Calculation (The Average Body Mass by Species and Sex)
+    
+    def test_avg_mass_basic(self): #Normal case: result should not be empty and contain tuples
+        result = avg_mass_by_species_sex(self.cleaned_data)
+        self.assertIsInstance(result, list)
+        self.assertGreater(len(result), 0)
+        self.assertIsInstance(result[0], tuple)
+
+    def test_avg_mass_species_present(self): #Ensure Adelie species is in result
+        result = avg_mass_by_species_sex(self.cleaned_data)
+        species_list = [r[0] for r in result]
+        self.assertIn('Adelie', species_list)
+
+    def test_avg_mass_values_reasonable(self): #Check body mass averages should be positive
+        result = avg_mass_by_species_sex(self.cleaned_data)
+        for _, _, avg in result:
+            self.assertGreater(avg, 0)
+
+    def test_avg_mass_ignore_invalid(self): #Ensure the function can skip rows with invalid body mass
+        invalid_row = {'species': 'Adelie', 'sex': 'Male', 'body_mass_g': 'NA'}
+        data = self.cleaned_data + [invalid_row]
+        result = avg_mass_by_species_sex(data)
+        self.assertIsInstance(result, list)
+        self.assertGreaterEqual(len(result), 1)
+
+    #Benson's Second Calculation (The Percentage Above Average Flipper Length)
+    
+    def test_flipper_above_basic(self): #Normal case: returns list not empty
+        avg_dict = species_flipper_avg(self.cleaned_data)
+        result = flipper_above_species_avg(self.cleaned_data, avg_dict)
+        self.assertIsInstance(result, list)
+        self.assertGreater(len(result), 0)
+
+    def test_flipper_above_percent_range(self): #Percentage values should be between 0 and 100
+        avg_dict = species_flipper_avg(self.cleaned_data)
+        result = flipper_above_species_avg(self.cleaned_data, avg_dict)
+        for _, _, pct in result:
+            self.assertTrue(0 <= pct <= 100)
+
+    def test_flipper_above_missing_species(self): #Missing species average should be skipped
+        fake_avg = {'FakePenguin': 100}
+        result = flipper_above_species_avg(self.cleaned_data, fake_avg)
+        # Should not contain fake species
+        species_list = [s for _, s, _ in result]
+        self.assertNotIn('FakePenguin', species_list)
+
+    def test_flipper_above_nonzero_islands(self): #Should include multiple islands
+        avg_dict = species_flipper_avg(self.cleaned_data)
+        result = flipper_above_species_avg(self.cleaned_data, avg_dict)
+        islands = {r[0] for r in result}
+        self.assertGreater(len(islands), 1)
+        
 #Write all results to a CSV file
 def write_csv(filename, results_dict):
 
